@@ -234,6 +234,8 @@ NSString * const UAProgressViewProgressAnimationKey = @"UAProgressViewProgressAn
 	}
 }
 
+
+
 - (void)removeFillAnimated:(BOOL)animated {
 	if (self.fillOnTouch) {
 		
@@ -256,8 +258,45 @@ NSString * const UAProgressViewProgressAnimationKey = @"UAProgressViewProgressAn
 	}
 }
 
+
 - (void)removeFill {
 	[self removeFillAnimated:YES];
+}
+
+#pragma mark - MM Custom Methods
+
+- (void)MMaddFillWithColor:(UIColor*)fillColor {
+    // update the layer model
+    self.progressView.layer.backgroundColor = fillColor.CGColor;
+    
+    // call block
+    if (self.fillChangedBlock) {
+        self.fillChangedBlock(self, YES, NO);
+    }
+}
+
+
+- (void)MMremoveFillAnimated:(BOOL)animated {
+    // add the fade-out animation
+    if (animated) {
+        CABasicAnimation *highlightAnimation = [CABasicAnimation animationWithKeyPath:@"backgroundColor"];
+        highlightAnimation.fromValue           = (id)self.progressView.layer.backgroundColor;
+        highlightAnimation.toValue             = (id)[UIColor clearColor].CGColor;
+        highlightAnimation.removedOnCompletion = NO;
+        [self.progressView.layer addAnimation:highlightAnimation forKey:@"backgroundColor"];
+    }
+    
+    // update the layer model.
+    self.progressView.layer.backgroundColor = [UIColor clearColor].CGColor;
+    
+    // call block
+    if (self.fillChangedBlock) {
+        self.fillChangedBlock(self, NO, animated);
+    }
+}
+
+-(void)MMremoveFill{
+    [self MMremoveFillAnimated:YES];
 }
 
 #pragma mark - CAAnimationDelegate

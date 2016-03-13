@@ -93,5 +93,9 @@
  *  @param animated Specify YES to animate the change or NO if you do not want the change to be animated.
  */
 - (void)setProgress:(CGFloat)progress animated:(BOOL)animated;
+// MML CUSTOMS
+//exposing these for flash visual cue
+- (void)MMaddFillWithColor:(UIColor*)fillColor;
+- (void)MMremoveFill;
 
 @end
